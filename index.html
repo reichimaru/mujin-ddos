@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Primary Meta Tags -->
+    <title>MUJIN DDoS STRIKER v3.0 | Elite Penetration Testing Framework</title>
+    <meta name="title" content="MUJIN DDoS STRIKER v3.0 | Elite Penetration Testing Framework" />
+    <meta name="description" content="MUJIN STRIKER is an elite-tier network stress testing and penetration research framework featuring 49 multi-vector attack methods (L7/L4). Built on a C++ 20 & Python 3.11 hybrid architecture." />
+    <meta name="keywords" content="ddos tool, penetration testing framework, network stress tester, layer 7 bypass, layer 4 attack, cybersecurity research, mujin striker, botnet matrix, ebpf sockets" />
+    <meta name="author" content="REICHIMARU TECH" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="theme-color" content="#ff003c" />
+    <link rel="canonical" href="https://mujin-striker.sys/" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://mujin-striker.sys/" />
+    <meta property="og:title" content="MUJIN DDoS STRIKER | Elite Penetration Testing Framework" />
+    <meta property="og:description" content="Execute high-intensity pressure patterns to bypass modern WAF and CDN protections. Absolute simplicity. Brutal execution." />
+    <meta property="og:image" content="https://mujin-striker.sys/og-cover.jpg" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://mujin-striker.sys/" />
+    <meta property="twitter:title" content="MUJIN DDoS STRIKER | Elite Penetration Testing Framework" />
+    <meta property="twitter:description" content="Execute high-intensity pressure patterns to bypass modern WAF and CDN protections. Absolute simplicity. Brutal execution." />
+    <meta property="twitter:image" content="https://mujin-striker.sys/twitter-cover.jpg" />
+
+    <!-- Schema.org Markup for Software Application -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "MUJIN DDoS STRIKER",
+      "operatingSystem": "Linux (Debian/Ubuntu/Arch), Docker Containers",
+      "applicationCategory": "SecurityApplication",
+      "applicationSubCategory": "Penetration Testing Framework",
+      "version": "3.0.0-alpha",
+      "author": {
+        "@type": "Organization",
+        "name": "REICHIMARU TECH",
+        "url": "https://t.me/MUJIN_CORE_OFFICIAL"
+      },
+      "description": "Elite-tier penetration research framework with 49 multi-vector L7/L4 attack capabilities including bypassing modern WAF and CDN protections.",
+      "softwareRequirements": "4 vCPU, 8GB RAM, 1Gbps Bandwidth",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock"
+      }
+    }
+    </script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "obsidian": "#050505",
+                        "accent-cyan": "#00f3ff",
+                        "accent-magenta": "#ff00ff",
+                        "accent-red": "#ff003c",
+                        "background-dark": "#050505",
+                    },
+                    fontFamily: {
+                        "heading": ["Space Grotesk", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"]
+                    },
+                    animation: {
+                        'glitch': 'glitch 1s infinite linear alternate-reverse',
+                        'scanline': 'scanline 8s linear infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        glitch: {
+                            '0%': { transform: 'translate(0)' },
+                            '20%': { transform: 'translate(-2px, 2px)' },
+                            '40%': { transform: 'translate(-2px, -2px)' },
+                            '60%': { transform: 'translate(2px, 2px)' },
+                            '80%': { transform: 'translate(2px, -2px)' },
+                            '100%': { transform: 'translate(0)' },
+                        },
+                        scanline: {
+                            '0%': { transform: 'translateY(-100%)' },
+                            '100%': { transform: 'translateY(100vh)' },
+                        }
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            background-color: #050505;
+            color: #E5E5E5;
+            overflow-x: hidden;
+            cursor: crosshair;
+        }
+
+        .crt-overlay {
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%),
+                linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background-size: 100% 3px, 3px 100%;
+            pointer-events: none;
+        }
+
+        .glow-mouse {
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(0, 243, 255, 0.05) 0%, rgba(0, 0, 0, 0) 60%);
+            position: fixed;
+            pointer-events: none;
+            z-index: 1;
+            transform: translate(-50%, -50%);
+            transition: opacity 0.3s ease-out;
+        }
+
+        .glass-panel {
+            background: rgba(10, 10, 10, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .glass-card {
+            background: rgba(10, 10, 10, 0.4);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .glitch-text {
+            text-shadow: 2px 0 #ff00ff, -2px 0 #00f3ff;
+        }
+
+        .cyan-glow {
+            text-shadow: 0 0 15px rgba(0, 243, 255, 0.6);
+        }
+
+        .magenta-glow {
+            text-shadow: 0 0 15px rgba(255, 0, 255, 0.6);
+        }
+
+        .border-text {
+            -webkit-text-stroke: 1px rgba(255, 255, 255, 0.8);
+            color: transparent;
+        }
+
+        .scanline-vertical {
+            width: 100%;
+            height: 4px;
+            background: rgba(0, 243, 255, 0.1);
+            position: absolute;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        /* Custom scrollbar for terminal */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #020202;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 243, 255, 0.3);
+        }
+    </style>
+</head>
+
+<body class="font-mono selection:bg-accent-magenta selection:text-white antialiased relative">
+    <!-- Interactive Glow -->
+    <div class="glow-mouse hidden md:block" id="glow"></div>
+
+    <!-- CRT Elements -->
+    <div class="fixed inset-0 crt-overlay z-[100] pointer-events-none opacity-40"></div>
+    <div class="fixed top-0 left-0 w-full h-full pointer-events-none z-[90] opacity-[0.05]">
+        <div class="scanline-vertical animate-scanline"></div>
+    </div>
+
+    <!-- Background SVG Noise -->
+    <div class="fixed inset-0 z-0 opacity-[0.03] pointer-events-none">
+        <svg height="100%" width="100%" xmlns="http://www.w3.org/2000/svg">
+            <filter id="noise">
+                <feTurbulence baseFrequency="0.8" numOctaves="4" stitchTiles="stitch" type="fractalNoise" />
+            </filter>
+            <rect fill="transparent" filter="url(#noise)" height="100%" width="100%" />
+        </svg>
+    </div>
+
+    <!-- Navigation -->
+    <nav
+        class="fixed top-0 w-full z-50 border-b border-white/5 glass-panel px-6 py-4 flex justify-between items-center transition-all">
+        <div class="flex items-center gap-3 group cursor-pointer">
+            <div
+                class="w-1.5 h-6 bg-accent-red group-hover:bg-accent-cyan group-hover:shadow-[0_0_10px_#00f3ff] transition-all duration-300">
+            </div>
+            <div class="flex flex-col">
+                <span
+                    class="font-heading font-black text-lg md:text-xl tracking-tighter text-white uppercase group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-accent-cyan group-hover:to-accent-magenta transition-all">REICHIMARU
+                    TECH</span>
+                <span
+                    class="text-[8px] md:text-[9px] font-mono text-gray-500 uppercase tracking-[0.4em] block group-hover:text-accent-cyan transition-colors mt-[-2px]">MUJIN
+                    DDoS STRIKER</span>
+            </div>
+        </div>
+        <div class="hidden md:flex gap-8 text-[10px] uppercase tracking-[0.3em] font-bold text-gray-400">
+            <a class="hover:text-accent-cyan transition-colors flex items-center gap-2" href="#trifecta"><span
+                    class="text-accent-magenta opacity-50">01.</span> TRIFECTA</a>
+            <a class="hover:text-accent-cyan transition-colors flex items-center gap-2" href="#arsenal"><span
+                    class="text-accent-magenta opacity-50">02.</span> ARSENAL</a>
+            <a class="hover:text-accent-cyan transition-colors flex items-center gap-2" href="#console"><span
+                    class="text-accent-magenta opacity-50">03.</span> CONSOLE</a>
+            <a class="hover:text-accent-cyan transition-colors flex items-center gap-2" href="#specs"><span
+                    class="text-accent-magenta opacity-50">04.</span> SPECS</a>
+        </div>
+        <a class="px-6 py-2 border border-accent-cyan/30 text-[10px] font-bold uppercase tracking-[0.3em] text-accent-cyan hover:border-accent-cyan hover:bg-accent-cyan hover:text-black transition-all shadow-[0_0_10px_rgba(0,243,255,0.1)] hidden md:block cursor-crosshair"
+            href="#acquire">[ REQUEST LICENSE ]</a>
+        <a class="px-4 py-2 bg-accent-cyan text-black text-[10px] font-bold uppercase tracking-[0.3em] md:hidden shadow-[0_0_10px_rgba(0,243,255,0.2)]"
+            href="#acquire">INITIATE</a>
+    </nav>
+
+    <main class="relative z-10 w-full">
+        <!-- Hero Section -->
+        <header class="relative min-h-[90vh] flex flex-col justify-center items-center p-6 pt-32 text-center w-full">
+            <div
+                class="absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_50%,_rgba(0,243,255,0.03)_0%,_transparent_60%)] pointer-events-none">
+            </div>
+
+            <div class="relative z-10 max-w-6xl w-full flex flex-col items-center">
+                <div
+                    class="inline-flex items-center gap-3 mb-8 px-4 py-1.5 border border-accent-magenta/30 bg-accent-magenta/5 text-accent-magenta text-[9px] md:text-[10px] font-bold tracking-[0.4em] uppercase rounded-full group cursor-crosshair">
+                    <span
+                        class="w-1.5 h-1.5 rounded-full bg-accent-magenta group-hover:animate-ping transition-all"></span>
+                    BUILD: v3.0.0-alpha // VETTED ACCESS ONLY
+                </div>
+
+                <h1
+                    class="font-heading text-4xl md:text-5xl lg:text-[6.5rem] font-black mb-6 tracking-tighter leading-[0.85] uppercase italic text-center w-full">
+                    <span class="text-white whitespace-nowrap">⛩️ MUJIN <span
+                            class="text-[#ff003c] drop-shadow-[0_0_20px_rgba(255,0,60,0.8)]">DDoS</span>
+                        ⛩️</span><br />
+                    <span
+                        class="border-text not-italic block mt-4 hover:text-white transition-colors duration-700 select-none">STRIKER</span>
+                </h1>
+
+                <p
+                    class="text-[#ff003c] drop-shadow-[0_0_10px_rgba(255,0,60,0.5)] font-bold tracking-[0.3em] md:tracking-[0.5em] uppercase text-[10px] md:text-sm mb-10">
+                    Operating in shadows, executing in mass.
+                </p>
+
+                <p
+                    class="font-mono text-gray-400 text-xs md:text-sm max-w-3xl mx-auto mb-14 px-6 md:px-0 leading-relaxed tracking-wide font-light">
+                    One command. <span class="text-white font-bold italic">Lethal intel.</span> Multi-vector saturation.
+                    Retry until the perimeter snaps.
+                    Powered by the <span
+                        class="text-accent-cyan font-bold hover:text-white transition-colors cursor-crosshair">GHOST
+                        EYE</span> / <span
+                        class="text-accent-magenta font-bold hover:text-white transition-colors cursor-crosshair">KAIRO</span>
+                    / <span
+                        class="text-white font-bold hover:text-accent-red transition-colors cursor-crosshair">MUJIN</span>
+                    ecosystem.
+                </p>
+
+                <div class="flex flex-col sm:flex-row gap-6 justify-center items-center w-full px-6">
+                    <a class="w-full sm:w-auto px-12 py-5 bg-[#ff003c] text-black font-heading font-black hover:bg-white transition-all duration-300 text-center tracking-[0.3em] uppercase shadow-[0_0_30px_rgba(255,0,60,0.4)] hover:-translate-y-1 cursor-crosshair text-xs md:text-sm"
+                        href="#console">
+                        [ INITIATE STRIKE ]
+                    </a>
+                    <a class="w-full sm:w-auto px-10 py-5 text-gray-400 font-heading font-bold hover:text-white hover:bg-white/5 transition-all text-center tracking-[0.3em] uppercase text-xs md:text-sm border border-white/10 hover:border-white/30 cursor-crosshair"
+                        href="#trifecta">
+                        READ DOCS _
+                    </a>
+                </div>
+            </div>
+
+            <!-- Statistics bottom hero -->
+            <div
+                class="mt-16 md:mt-24 flex flex-wrap justify-center gap-12 md:gap-24 opacity-70 w-full px-6 relative z-10">
+                <div class="flex flex-col items-center group cursor-crosshair">
+                    <span
+                        class="font-heading text-4xl font-black text-white group-hover:text-accent-cyan transition-colors">49</span>
+                    <span
+                        class="font-mono text-[9px] tracking-[0.3em] text-gray-500 uppercase mt-2 group-hover:text-white transition-colors">Total
+                        Methods</span>
+                </div>
+                <div class="flex flex-col items-center group cursor-crosshair">
+                    <span
+                        class="font-heading text-4xl font-black text-accent-cyan group-hover:text-white transition-colors">26</span>
+                    <span
+                        class="font-mono text-[9px] tracking-[0.3em] text-accent-cyan uppercase mt-2 group-hover:text-white transition-colors">Layer
+                        7</span>
+                </div>
+                <div class="flex flex-col items-center group cursor-crosshair">
+                    <span
+                        class="font-heading text-4xl font-black text-accent-magenta group-hover:text-white transition-colors">23</span>
+                    <span
+                        class="font-mono text-[9px] tracking-[0.3em] text-accent-magenta uppercase mt-2 group-hover:text-white transition-colors">Layer
+                        4</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Disclaimer Banner -->
+        <section
+            class="bg-yellow-400 text-black py-3 font-mono font-black text-[9px] sm:text-[10px] uppercase tracking-[0.4em] text-center overflow-hidden whitespace-nowrap shadow-[0_0_20px_rgba(250,204,21,0.3)] border-y-[3px] border-black relative z-20"
+            style="background-image: repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(0,0,0,0.1) 35px, rgba(0,0,0,0.1) 70px);">
+            <div class="flex gap-12 justify-center animate-[marquee_20s_linear_infinite]">
+                <span class="opacity-90">⚠️ AUTHORIZED PENETRATION RESEARCH ONLY</span>
+                <span class="hidden md:inline opacity-90">ETHICAL DISCLAIMER: VETTED STRESS TESTING</span>
+                <span class="opacity-90">⚠️ SYSTEM DEGRADATION AUTHORIZATION REQUIRED</span>
+                <span class="hidden md:inline opacity-90">LIABILITY WAIVER MUST BE SIGNED</span>
+            </div>
+        </section>
+
+        <!-- Easy to Strike -->
+        <section class="py-24 px-6 bg-[#030303] border-b border-white/5 relative overflow-hidden" id="easy-strike">
+            <style>
+                @keyframes typing {
+
+                    0%,
+                    15% {
+                        width: 0;
+                    }
+
+                    40%,
+                    60% {
+                        width: 100%;
+                    }
+
+                    85%,
+                    100% {
+                        width: 0;
+                    }
+                }
+
+                @keyframes blink-caret {
+
+                    from,
+                    to {
+                        border-color: transparent
+                    }
+
+                    50% {
+                        border-color: #00f3ff;
+                    }
+                }
+
+                .animate-typing-loop {
+                    display: inline-block;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    border-right: .15em solid #00f3ff;
+                    animation: typing 6s steps(48, end) infinite, blink-caret .75s step-end infinite;
+                    max-width: fit-content;
+                }
+            </style>
+            <div
+                class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(255,0,60,0.05)_0%,_transparent_50%)]">
+            </div>
+            <div class="max-w-4xl mx-auto relative z-10 text-center">
+                <h2
+                    class="text-3xl md:text-5xl font-black font-heading text-white mb-6 italic uppercase tracking-tighter">
+                    Absolute <span class="text-accent-cyan">Simplicity.</span> Brutal <span
+                        class="text-accent-red">Execution.</span>
+                </h2>
+                <div class="h-1 w-24 bg-gradient-to-r from-accent-red to-transparent mx-auto mb-6"></div>
+                <p
+                    class="text-gray-400 font-mono text-[10px] md:text-xs tracking-[0.3em] uppercase mb-12 leading-relaxed">
+                    No complex setups. One command orchestrates the entire botnet matrix.<br />
+                    <span class="text-accent-cyan font-bold italic">Automated Strike by default. Manual Overrides
+                        available.</span>
+                </p>
+
+                <!-- Terminal Mockup -->
+                <div
+                    class="bg-[#050505] rounded-lg border border-white/10 shadow-[0_0_30px_rgba(0,0,0,0.8)] overflow-hidden max-w-2xl mx-auto text-left group">
+                    <!-- Window Controls -->
+                    <div class="flex items-center gap-2 px-4 py-3 border-b border-white/5 bg-white/[0.02]">
+                        <div class="w-3 h-3 rounded-full bg-red-500/50 group-hover:bg-red-500 transition-colors"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500/50 group-hover:bg-yellow-500 transition-colors">
+                        </div>
+                        <div class="w-3 h-3 rounded-full bg-green-500/50 group-hover:bg-green-500 transition-colors">
+                        </div>
+                        <div class="ml-auto font-mono text-[10px] text-gray-500 tracking-widest">root@mujin-sys:~</div>
+                    </div>
+                    <!-- Terminal Body -->
+                    <div class="p-6 md:p-8 font-mono text-[11px] md:text-sm leading-relaxed">
+                        <div class="flex items-center text-accent-cyan min-h-[30px]">
+                            <span class="mr-3 text-accent-magenta font-bold">~ $</span>
+                            <span class="text-gray-300 animate-typing-loop">.\mujin-strike https://target.com
+                                --infinite</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- The Trifecta -->
+        <section class="py-32 px-6 max-w-7xl mx-auto relative border-b border-white/5" id="trifecta">
+            <div class="mb-20 text-center md:text-left">
+                <h2
+                    class="font-heading text-4xl md:text-5xl lg:text-6xl font-black uppercase tracking-tighter text-white mb-2 leading-none">
+                    THE <span
+                        class="text-transparent border-text block md:inline mt-2 md:mt-0 hover:text-accent-magenta transition-colors cursor-default">TRIFECTA</span>
+                </h2>
+                <div class="h-1 w-24 bg-gradient-to-r from-accent-magenta to-transparent mt-8 mb-6 md:mx-0 mx-auto">
+                </div>
+                <p class="text-gray-500 font-mono text-[10px] tracking-[0.4em] uppercase">Architecture / System
+                    Components</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Node 01 -->
+                <div
+                    class="glass-card p-10 group hover:bg-white/[0.04] border-t-[3px] border-t-white/10 hover:border-t-accent-cyan transition-all duration-500 relative overflow-hidden flex flex-col h-full cursor-crosshair">
+                    <div
+                        class="absolute top-0 right-0 p-4 font-mono text-[9px] text-gray-600 tracking-widest group-hover:text-accent-cyan transition-colors">
+                        [ 01_INTEL ]</div>
+                    <div
+                        class="mb-8 w-14 h-14 bg-white/5 flex items-center justify-center rounded-sm border border-white/10 group-hover:border-accent-cyan/50 group-hover:bg-accent-cyan/10 transition-all shadow-[0_0_0_rgba(0,243,255,0)] group-hover:shadow-[0_0_20px_rgba(0,243,255,0.2)]">
+                        <svg class="w-6 h-6 text-gray-400 group-hover:text-accent-cyan transition-colors" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                    </div>
+                    <h3
+                        class="font-heading text-2xl font-bold mb-4 text-white uppercase tracking-tight group-hover:text-accent-cyan group-hover:cyan-glow transition-all">
+                        GHOST EYE</h3>
+                    <p
+                        class="font-mono text-gray-400 text-xs leading-relaxed flex-grow group-hover:text-gray-300 transition-colors">
+                        Advanced intelligence gathering. Automated target surface mapping and vulnerability detection
+                        prior to execution. Finds the exposed arteries before the strike.</p>
+                </div>
+                <!-- Node 02 -->
+                <div
+                    class="glass-card p-10 group hover:bg-white/[0.04] border-t-[3px] border-t-white/10 hover:border-t-accent-magenta transition-all duration-500 relative overflow-hidden flex flex-col h-full cursor-crosshair">
+                    <div
+                        class="absolute top-0 right-0 p-4 font-mono text-[9px] text-gray-600 tracking-widest group-hover:text-accent-magenta transition-colors">
+                        [ 02_ORCHESTRA ]</div>
+                    <div
+                        class="mb-8 w-14 h-14 bg-white/5 flex items-center justify-center rounded-sm border border-white/10 group-hover:border-accent-magenta/50 group-hover:bg-accent-magenta/10 transition-all shadow-[0_0_0_rgba(255,0,255,0)] group-hover:shadow-[0_0_20px_rgba(255,0,255,0.2)]">
+                        <svg class="w-6 h-6 text-gray-400 group-hover:text-accent-magenta transition-colors" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                        </svg>
+                    </div>
+                    <h3
+                        class="font-heading text-2xl font-bold mb-4 text-white uppercase tracking-tight group-hover:text-accent-magenta group-hover:magenta-glow transition-all">
+                        KAIRO</h3>
+                    <p
+                        class="font-mono text-gray-400 text-xs leading-relaxed flex-grow group-hover:text-gray-300 transition-colors">
+                        Central orchestration engine. Synchronizes distributed nodes for multi-vector saturation with
+                        microsecond precision. The hive mind controlling the swarm.</p>
+                </div>
+                <!-- Node 03 -->
+                <div
+                    class="glass-card p-10 group hover:bg-white/[0.04] border-t-[3px] border-t-white/10 hover:border-t-white transition-all duration-500 relative overflow-hidden flex flex-col h-full cursor-crosshair">
+                    <div
+                        class="absolute top-0 right-0 p-4 font-mono text-[9px] text-gray-600 tracking-widest group-hover:text-white transition-colors">
+                        [ 03_PRESSURE ]</div>
+                    <div
+                        class="mb-8 w-14 h-14 bg-white/5 flex items-center justify-center rounded-sm border border-white/10 group-hover:border-white/50 group-hover:bg-white/10 transition-all shadow-[0_0_0_rgba(255,255,255,0)] group-hover:shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+                        <svg class="w-6 h-6 text-gray-400 group-hover:text-white transition-colors" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </div>
+                    <h3
+                        class="font-heading text-2xl font-bold mb-4 text-white uppercase tracking-tight group-hover:text-white transition-all textShadow delay-75">
+                        MUJIN STRIKER</h3>
+                    <p
+                        class="font-mono text-gray-400 text-xs leading-relaxed flex-grow group-hover:text-gray-300 transition-colors">
+                        The effector. Executes high-intensity pressure patterns designed to bypass modern WAF and CDN
+                        protections. Raw socket annihilation capabilities with 0-trace termination.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Why MUJIN Grid -->
+        <section class="py-32 px-6 relative border-b border-white/5 z-10 bg-[#030303]">
+            <div class="max-w-7xl mx-auto">
+                <div class="mb-16 text-center md:text-right">
+                    <h2
+                        class="font-heading text-4xl md:text-5xl lg:text-6xl font-black text-white mb-2 uppercase tracking-tighter">
+                        WHY <span
+                            class="text-transparent border-text block md:inline mt-2 md:mt-0 hover:text-white transition-colors cursor-default">MUJIN
+                            DDoS
+                            IS BRUTAL</span></h2>
+                    <div class="h-1 w-24 bg-gradient-to-l from-accent-cyan to-transparent mt-6 mb-4 md:ml-auto mx-auto">
+                    </div>
+                    <p class="text-gray-500 font-mono text-[10px] tracking-[0.4em] uppercase">Elite-Tier Capabilities
+                        For Penetration Research</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-white/5 border border-white/5">
+                    <div class="glass-card p-10 group hover:bg-white/[0.04] transition-colors cursor-crosshair">
+                        <h4
+                            class="text-accent-cyan text-[10px] mb-4 font-bold tracking-[0.3em] uppercase group-hover:text-white transition-colors flex items-center gap-3">
+                            <span
+                                class="w-1.5 h-1.5 bg-accent-cyan rounded-full group-hover:shadow-[0_0_10px_rgba(0,243,255,0.6)] group-hover:animate-ping"></span>Intelligence
+                        </h4>
+                        <p
+                            class="text-gray-400 font-mono text-[11px] leading-relaxed group-hover:text-gray-300 transition-colors">
+                            Pre-strike footprinting and reconnaissance.</p>
+                    </div>
+                    <div class="glass-card p-10 group hover:bg-white/[0.04] transition-colors cursor-crosshair">
+                        <h4
+                            class="text-accent-cyan text-[10px] mb-4 font-bold tracking-[0.3em] uppercase group-hover:text-white transition-colors flex items-center gap-3">
+                            <span
+                                class="w-1.5 h-1.5 bg-accent-cyan rounded-full group-hover:shadow-[0_0_10px_rgba(0,243,255,0.6)] group-hover:animate-ping"></span>Lethal
+                            Strike
+                        </h4>
+                        <p
+                            class="text-gray-400 font-mono text-[11px] leading-relaxed group-hover:text-gray-300 transition-colors">
+                            Saturation optimized for rapid resource depletion.</p>
+                    </div>
+                    <div class="glass-card p-10 group hover:bg-white/[0.04] transition-colors cursor-crosshair">
+                        <h4
+                            class="text-accent-cyan text-[10px] mb-4 font-bold tracking-[0.3em] uppercase group-hover:text-white transition-colors flex items-center gap-3">
+                            <span
+                                class="w-1.5 h-1.5 bg-accent-cyan rounded-full group-hover:shadow-[0_0_10px_rgba(0,243,255,0.6)] group-hover:animate-ping"></span>Adaptive
+                            Retry
+                        </h4>
+                        <p
+                            class="text-gray-400 font-mono text-[11px] leading-relaxed group-hover:text-gray-300 transition-colors">
+                            Smart persistence that adapts to server-side rate limits.</p>
+                    </div>
+                    <div class="glass-card p-10 group hover:bg-white/[0.04] transition-colors cursor-crosshair">
+                        <h4
+                            class="text-accent-cyan text-[10px] mb-4 font-bold tracking-[0.3em] uppercase group-hover:text-white transition-colors flex items-center gap-3">
+                            <span
+                                class="w-1.5 h-1.5 bg-accent-cyan rounded-full group-hover:shadow-[0_0_10px_rgba(0,243,255,0.6)] group-hover:animate-ping"></span>Failsafe
+                            Degrade
+                        </h4>
+                        <p
+                            class="text-gray-400 font-mono text-[11px] leading-relaxed group-hover:text-gray-300 transition-colors">
+                            Controlled performance testing benchmarks.</p>
+                    </div>
+                    <div class="glass-card p-10 group hover:bg-white/[0.04] transition-colors cursor-crosshair">
+                        <h4
+                            class="text-accent-magenta text-[10px] mb-4 font-bold tracking-[0.3em] uppercase group-hover:text-white transition-colors flex items-center gap-3">
+                            <span
+                                class="w-1.5 h-1.5 bg-accent-magenta rounded-full group-hover:shadow-[0_0_10px_rgba(255,0,255,0.6)] group-hover:animate-ping"></span>Origin
+                            Unmasking
+                        </h4>
+                        <p
+                            class="text-gray-400 font-mono text-[11px] leading-relaxed group-hover:text-gray-300 transition-colors">
+                            Bypass reverse proxies to identify source infrastructure.</p>
+                    </div>
+                    <div class="glass-card p-10 group hover:bg-white/[0.04] transition-colors cursor-crosshair">
+                        <h4
+                            class="text-accent-magenta text-[10px] mb-4 font-bold tracking-[0.3em] uppercase group-hover:text-white transition-colors flex items-center gap-3">
+                            <span
+                                class="w-1.5 h-1.5 bg-accent-magenta rounded-full group-hover:shadow-[0_0_10px_rgba(255,0,255,0.6)] group-hover:animate-ping"></span>Target-Vetted
+                            Nodes
+                        </h4>
+                        <p
+                            class="text-gray-400 font-mono text-[11px] leading-relaxed group-hover:text-gray-300 transition-colors">
+                            Clean, high-reputation egress points for maximum stealth.</p>
+                    </div>
+                    <div class="glass-card p-10 group hover:bg-white/[0.04] transition-colors cursor-crosshair">
+                        <h4
+                            class="text-accent-magenta text-[10px] mb-4 font-bold tracking-[0.3em] uppercase group-hover:text-white transition-colors flex items-center gap-3">
+                            <span
+                                class="w-1.5 h-1.5 bg-accent-magenta rounded-full group-hover:shadow-[0_0_10px_rgba(255,0,255,0.6)] group-hover:animate-ping"></span>HTTP/2
+                            CFFI Spoofing
+                        </h4>
+                        <p
+                            class="text-gray-400 font-mono text-[11px] leading-relaxed group-hover:text-gray-300 transition-colors">
+                            Advanced fingerprinting to mimic legitimate browser traffic.</p>
+                    </div>
+                    <div class="glass-card p-10 group hover:bg-white/[0.04] transition-colors cursor-crosshair">
+                        <h4
+                            class="text-accent-magenta text-[10px] mb-4 font-bold tracking-[0.3em] uppercase group-hover:text-white transition-colors flex items-center gap-3">
+                            <span
+                                class="w-1.5 h-1.5 bg-accent-magenta rounded-full group-hover:shadow-[0_0_10px_rgba(255,0,255,0.6)] group-hover:animate-ping"></span>Forensic
+                            Telemetry
+                        </h4>
+                        <p
+                            class="text-gray-400 font-mono text-[11px] leading-relaxed group-hover:text-gray-300 transition-colors">
+                            Real-time strike data and packet-level reporting.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Command Console / Execution Section -->
+        <section
+            class="py-32 bg-[#020202] border-b border-white/5 relative z-10 shadow-[0_0_100px_rgba(0,243,255,0.015)] overflow-hidden"
+            id="console">
+            <!-- Decorative Matrix bg -->
+            <div class="absolute inset-0 z-0 opacity-[0.05]"
+                style="background-image: radial-gradient(#00f3ff 1px, transparent 1px); background-size: 30px 30px; mask-image: linear-gradient(to bottom, transparent, black, transparent);">
+            </div>
+
+            <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center relative z-10">
+                <!-- Left Details -->
+                <div class="order-2 lg:order-1 space-y-8">
+                    <h2
+                        class="font-heading text-4xl md:text-5xl lg:text-6xl font-black mb-8 uppercase tracking-tighter text-white leading-none">
+                        Execution <br /><span class="text-accent-cyan break-words">Flow.</span></h2>
+
+                    <div
+                        class="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-white/10 before:to-transparent">
+                        <!-- Step 01 -->
+                        <div class="relative flex items-start gap-6 group cursor-crosshair">
+                            <div
+                                class="flex items-center justify-center w-10 h-10 rounded-full border border-white/10 bg-[#050505] group-hover:bg-accent-cyan/10 group-hover:border-accent-cyan/50 transition-all duration-300 shadow-[0_0_10px_rgba(0,0,0,0)] group-hover:shadow-[0_0_15px_rgba(0,243,255,0.2)] shrink-0 relative z-10">
+                                <span class="text-accent-cyan font-bold font-mono text-xs">01</span>
+                            </div>
+                            <div>
+                                <h5
+                                    class="text-white font-heading font-black mb-2 uppercase text-lg group-hover:text-accent-cyan transition-colors tracking-widest flex items-center gap-2">
+                                    Autonomous Initialization</h5>
+                                <p
+                                    class="text-gray-400 font-mono text-xs leading-relaxed group-hover:text-gray-300 transition-colors">
+                                    System boots GHOST EYE to verify target connectivity and proxy availability.</p>
+                            </div>
+                        </div>
+                        <!-- Step 02 -->
+                        <div class="relative flex items-start gap-6 group cursor-crosshair">
+                            <div
+                                class="flex items-center justify-center w-10 h-10 rounded-full border border-white/10 bg-[#050505] group-hover:bg-accent-magenta/10 group-hover:border-accent-magenta/50 transition-all duration-300 shadow-[0_0_10px_rgba(0,0,0,0)] group-hover:shadow-[0_0_15px_rgba(255,0,255,0.2)] shrink-0 relative z-10">
+                                <span class="text-accent-magenta font-bold font-mono text-xs">02</span>
+                            </div>
+                            <div>
+                                <h5
+                                    class="text-white font-heading font-black mb-2 uppercase text-lg group-hover:text-accent-magenta transition-colors tracking-widest flex items-center gap-2">
+                                    Vector Selection</h5>
+                                <p
+                                    class="text-gray-400 font-mono text-xs leading-relaxed group-hover:text-gray-300 transition-colors">
+                                    Dynamic analysis of target server headers to choose optimal L7/L4 method.</p>
+                            </div>
+                        </div>
+                        <!-- Step 03 -->
+                        <div class="relative flex items-start gap-6 group cursor-crosshair">
+                            <div
+                                class="flex items-center justify-center w-10 h-10 rounded-full border border-white/10 bg-[#050505] group-hover:bg-accent-red/10 group-hover:border-accent-red/50 transition-all duration-300 shadow-[0_0_10px_rgba(0,0,0,0)] group-hover:shadow-[0_0_15px_rgba(255,0,60,0.2)] shrink-0 relative z-10">
+                                <span class="text-accent-red font-bold font-mono text-xs">03</span>
+                            </div>
+                            <div>
+                                <h5
+                                    class="text-white font-heading font-black mb-2 uppercase text-lg group-hover:text-accent-red transition-colors tracking-widest flex items-center gap-2">
+                                    Saturation Phase</h5>
+                                <p
+                                    class="text-gray-400 font-mono text-xs leading-relaxed group-hover:text-gray-300 transition-colors">
+                                    Full deployment of MUJIN STRIKER threads with adaptive retry logic.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Terminal Window Simulator -->
+                <div
+                    class="order-1 lg:order-2 glass-panel p-2 rounded-sm shadow-[0_0_50px_rgba(0,243,255,0.05)] border border-accent-cyan/20 relative cursor-crosshair group hover:border-accent-cyan/40 transition-colors duration-500">
+                    <!-- Corner Brackets -->
+                    <div
+                        class="absolute -top-3 -right-3 w-6 h-6 border-t-[2px] border-r-[2px] border-accent-cyan group-hover:scale-110 transition-transform duration-500">
+                    </div>
+                    <div
+                        class="absolute -bottom-3 -left-3 w-6 h-6 border-b-[2px] border-l-[2px] border-accent-cyan group-hover:scale-110 transition-transform duration-500">
+                    </div>
+
+                    <div class="bg-[#050505] rounded-sm overflow-hidden flex flex-col h-full relative">
+                        <!-- Terminal Glitch Overlay Effect on hover -->
+                        <div
+                            class="absolute inset-0 bg-accent-cyan/5 opacity-0 group-hover:opacity-100 mix-blend-overlay transition-opacity duration-300 pointer-events-none">
+                        </div>
+
+                        <div
+                            class="bg-white/5 px-4 py-3 flex justify-between items-center border-b border-white/10 text-[9px] text-gray-400 uppercase font-black tracking-[0.4em]">
+                            <div class="flex items-center gap-2">
+                                <span
+                                    class="w-2.5 h-2.5 rounded-full bg-red-500 shadow-[0_0_5px_rgba(239,68,68,0.5)]"></span>
+                                <span
+                                    class="w-2.5 h-2.5 rounded-full bg-yellow-500 shadow-[0_0_5px_rgba(234,179,8,0.5)]"></span>
+                                <span
+                                    class="w-2.5 h-2.5 rounded-full bg-green-500 shadow-[0_0_5px_rgba(34,197,94,0.5)]"></span>
+                            </div>
+                            <span class="text-accent-cyan animate-pulse font-mono tracking-widest">mujin-striker
+                                --terminal</span>
+                        </div>
+                        <div
+                            class="p-6 font-mono text-[11px] md:text-sm leading-loose text-gray-300 h-[350px] overflow-y-auto w-full space-y-3">
+                            <div class="text-gray-600 select-none pb-2 border-b border-white/5"># Initializing MUJIN
+                                v3.0.0-alpha...</div>
+                            <div class="text-accent-cyan break-all flex items-start gap-2">
+                                <span class="text-accent-magenta font-bold">~ $</span>
+                                <div>
+                                    .\mujin-ddos <span class="text-gray-400">--target</span>
+                                    "https://api.internal.target" <span class="text-gray-400">--method</span>
+                                    HTTPS-BYPASS <span class="text-gray-400">--threads</span> 1024
+                                </div>
+                            </div>
+                            <div class="text-gray-300">[<span class="text-accent-cyan font-bold">INFO</span>] GHOST EYE:
+                                Target reachable (200 OK)</div>
+                            <div class="text-gray-300 delay-100">[<span class="text-accent-cyan font-bold">INFO</span>]
+                                KAIRO: Synchronizing 12 global proxies...</div>
+                            <div
+                                class="text-accent-magenta delay-200 border-l-2 border-accent-magenta pl-3 bg-accent-magenta/5">
+                                [<span class="font-bold">WARM</span>] STRIKER: Thread saturation at 84%
+                            </div>
+                            <div
+                                class="text-white font-bold group-hover:animate-pulse transition-all drop-shadow-[0_0_8px_rgba(255,255,255,0.4)] delay-300">
+                                [STRIKE] 5,290 req/sec | PPS: 140k | Packets: HTTPS/2
+                            </div>
+                            <div class="flex items-center gap-2 mt-4 text-accent-cyan">
+                                <span class="w-2 h-4 bg-accent-cyan animate-pulse"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Arsenal Section (L7/L4 Lists) -->
+        <section class="py-32 px-6 bg-[#030303] relative border-b border-white/5" id="arsenal">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex flex-col md:flex-row-reverse md:items-end justify-between mb-16 gap-6">
+                    <div class="text-center md:text-right">
+                        <h2 class="font-heading text-4xl md:text-5xl lg:text-6xl font-black text-white uppercase mb-2">
+                            The Arsenal</h2>
+                        <div class="h-1 w-24 bg-white mt-6 mb-4 md:ml-auto mx-auto"></div>
+                        <p class="text-gray-500 font-mono text-[10px] tracking-[0.4em] uppercase">Multivector
+                            Capabilities (49 Total)</p>
+                    </div>
+                    <div
+                        class="flex justify-center flex-wrap gap-4 font-mono text-[10px] uppercase font-bold tracking-[0.2em]">
+                        <span
+                            class="px-5 py-2.5 bg-accent-cyan/5 text-accent-cyan border border-accent-cyan/30 shadow-[0_0_10px_rgba(0,243,255,0.05)]">[
+                            L7: 26 ]</span>
+                        <span
+                            class="px-5 py-2.5 bg-accent-magenta/5 text-accent-magenta border border-accent-magenta/30 shadow-[0_0_10px_rgba(255,0,255,0.05)]">[
+                            L4: 23 ]</span>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8 lg:gap-16">
+                    <!-- Layer 7 -->
+                    <div
+                        class="glass-card p-10 lg:p-12 border-l-[4px] border-l-accent-cyan hover:bg-white/[0.04] transition-colors duration-500 hover:border-l-accent-magenta group cursor-crosshair">
+                        <div class="flex justify-between items-center mb-10 border-b border-white/5 pb-6">
+                            <h3
+                                class="font-heading text-xl font-bold text-white uppercase tracking-widest flex items-center gap-4">
+                                <span
+                                    class="w-2 h-2 bg-accent-cyan shadow-[0_0_10px_#00f3ff] group-hover:bg-accent-magenta group-hover:shadow-[0_0_10px_#ff00ff] transition-all duration-500"></span>
+                                LAYER 7
+                                <span
+                                    class="text-gray-500 font-mono text-[10px] font-normal tracking-widest">(APP)</span>
+                            </h3>
+                        </div>
+                        <div class="grid grid-cols-2 gap-y-5 gap-x-8 font-mono text-[11px] text-gray-400 font-medium">
+                            <div
+                                class="flex justify-between border-b border-white/5 pb-2 group/item hover:text-white transition-colors">
+                                <span class="flex items-center gap-2"><span
+                                        class="text-accent-cyan opacity-50 text-[10px]">//</span> CFB</span>
+                            </div>
+                            <div
+                                class="flex justify-between border-b border-white/5 pb-2 group/item hover:text-white transition-colors">
+                                <span class="flex items-center gap-2"><span
+                                        class="text-accent-cyan opacity-50 text-[10px]">//</span> BYPASS</span>
+                            </div>
+                            <div
+                                class="flex justify-between border-b border-white/5 pb-2 group/item hover:text-white transition-colors">
+                                <span class="flex items-center gap-2"><span
+                                        class="text-accent-cyan opacity-50 text-[10px]">//</span> GET</span>
+                            </div>
+                            <div
+                                class="flex justify-between border-b border-white/5 pb-2 group/item hover:text-white transition-colors">
+                                <span class="flex items-center gap-2"><span
+                                        class="text-accent-cyan opacity-50 text-[10px]">//</span> POST</span>
+                            </div>
+                            <div
+                                class="flex justify-between border-b border-white/5 pb-2 group/item hover:text-white transition-colors">
+                                <span class="flex items-center gap-2"><span
+                                        class="text-accent-cyan opacity-50 text-[10px]">//</span> OVH</span>
+                            </div>
+                            <div
+                                class="flex justify-between border-b border-white/5 pb-2 group/item hover:text-white transition-colors">
+                                <span class="flex items-center gap-2"><span
+                                        class="text-accent-cyan opacity-50 text-[10px]">//</span> STRESS</span>
+                            </div>
+                            <div
+                                class="flex justify-between border-b border-white/5 pb-2 group/item hover:text-white transition-colors">
+                                <span class="flex items-center gap-2"><span
+                                        class="text-accent-cyan opacity-50 text-[10px]">//</span> DYN</span>
+                            </div>
+                            <div
+                                class="flex justify-between border-b border-white/5 pb-2 group/item hover:text-white transition-colors">
+                                <span class="flex items-center gap-2"><span
+                                        class="text-accent-cyan opacity-50 text-[10px]">//</span> SLOW</span>
+                            </div>
+                            <div
+                                class="flex justify-between border-b border-white/5 pb-2 group/item hover:text-white transition-colors">
+                                <span class="flex items-center gap-2"><span
+                                        class="text-accent-cyan opacity-50 text-[10px]">//</span> HEAD</span>
+                            </div>
+                            <div
+                                class="flex justify-between border-b border-white/5 pb-2 group/item hover:text-white transition-colors">
+                                <span class="flex items-center gap-2"><span
+                                        class="text-accent-cyan opacity-50 text-[10px]">//</span> NULL</span>
+                            </div>
+                            <div
+                                class="flex justify-between border-b border-white/5 pb-2 group/item hover:text-white transition-colors">
+                                <span class="flex items-center gap-2"><span
+                                        class="text-accent-cyan opacity-50 text-[10px]">//</span> COOKIE</span>
+                            </div>
+                            <div
+                                class="flex justify-between border-b border-white/5 pb-2 group/item hover:text-white transition-colors">
+                                <span class="flex items-center gap-2"><span
+                                        class="text-accent-cyan opacity-50 text-[10px]">//</span> PPS</span>
+                            </div>
+                            <div
+                                class="flex justify-between border-b border-white/5 pb-2 group/item hover:text-white transition-colors">
+                                <span class="flex items-center gap-2"><span
+                                        class="text-accent-cyan opacity-50 text-[10px]">//</span> EVEN</span>
+                            </div>
+                            <div
+                                class="flex justify-between border-b border-white/5 pb-2 group/item hover:text-white transition-colors">
+                                <span class="flex items-center gap-2"><span
+                                        class="text-accent-cyan opacity-50 text-[10px]">//</span> GSB</span>
+                            </div>
+                            <div
+                                class="flex justify-between border-b border-white/5 pb-2 group/item hover:text-white transition-colors">
+                                <span class="flex items-center gap-2"><span
+                                        class="text-accent-cyan opacity-50 text-[10px]">//</span> DGB</span>
+                            </div>
+                            <div
+                                class="flex justify-between border-b border-white/5 pb-2 group/item hover:text-white transition-colors">
+                                <span class="flex items-center gap-2"><span
+                                        class="text-accent-cyan opacity-50 text-[10px]">//</span> AVB</span>
+                            </div>
+                            <div
+                                class="flex justify-between border-b border-white/5 pb-2 group/item hover:text-white transition-colors">
+                                <span class="flex items-center gap-2"><span
+                                        class="text-accent-cyan opacity-50 text-[10px]">//</span> CFBUAM</span>
+                            </div>
+                            <div
+                                class="flex justify-between border-b border-white/5 pb-2 group/item hover:text-white transition-colors">
+                                <span class="flex items-center gap-2"><span
+                                        class="text-accent-cyan opacity-50 text-[10px]">//</span> APACHE</span>
+                            </div>
+                            <div
+                                class="flex justify-between border-b border-white/5 pb-2 group/item hover:text-white transition-colors">
+                                <span class="flex items-center gap-2"><span
+                                        class="text-accent-cyan opacity-50 text-[10px]">//</span> XMLRPC</span>
+                            </div>
+                            <div
+                                class="flex justify-between border-b border-white/5 pb-2 group/item hover:text-white transition-colors">
+                                <span class="flex items-center gap-2"><span
+                                        class="text-accent-cyan opacity-50 text-[10px]">//</span> BOT</span>
+                            </div>
+                            <div
+                                class="flex justify-between border-b border-white/5 pb-2 group/item hover:text-white transition-colors">
+                                <span class="flex items-center gap-2"><span
+                                        class="text-accent-cyan opacity-50 text-[10px]">//</span> BOMB</span>
+                            </div>
+                            <div
+                                class="flex justify-between border-b border-white/5 pb-2 group/item hover:text-white transition-colors">
+                                <span class="flex items-center gap-2"><span
+                                        class="text-accent-cyan opacity-50 text-[10px]">//</span> DOWNLOADER</span>
+                            </div>
+                            <div
+                                class="flex justify-between border-b border-white/5 pb-2 group/item hover:text-white transition-colors">
+                                <span class="flex items-center gap-2"><span
+                                        class="text-accent-cyan opacity-50 text-[10px]">//</span> KILLER</span>
+                            </div>
+                            <div
+                                class="flex justify-between border-b border-white/5 pb-2 group/item hover:text-white transition-colors">
+                                <span class="flex items-center gap-2"><span
+                                        class="text-accent-cyan opacity-50 text-[10px]">//</span> TOR</span>
+                            </div>
+                            <div
+                                class="flex justify-between border-b border-white/5 pb-2 group/item hover:text-white transition-colors">
+                                <span class="flex items-center gap-2"><span
+                                        class="text-accent-cyan opacity-50 text-[10px]">//</span> RHEX</span>
+                            </div>
+                            <div
+                                class="flex justify-between border-b border-white/5 pb-2 group/item hover:text-white transition-colors">
+                                <span class="flex items-center gap-2"><span
+                                        class="text-accent-cyan opacity-50 text-[10px]">//</span> STOMP</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Layer 4 -->
+                    <div
+                        class="glass-card p-10 lg:p-12 border-r-[4px] border-r-accent-magenta hover:bg-white/[0.04] transition-colors duration-500 hover:border-r-accent-cyan group cursor-crosshair">
+                        <div
+                            class="flex justify-between items-center mb-10 border-b border-white/5 pb-6 flex-row-reverse">
+                            <h3
+                                class="font-heading text-xl font-bold text-white uppercase tracking-widest flex items-center gap-4 flex-row-reverse text-right">
+                                <span
+                                    class="w-2 h-2 bg-accent-magenta shadow-[0_0_10px_#ff00ff] group-hover:bg-accent-cyan group-hover:shadow-[0_0_10px_#00f3ff] transition-all duration-500"></span>
+                                LAYER 4
+                                <span
+                                    class="text-gray-500 font-mono text-[10px] font-normal tracking-widest">(NET)</span>
+                            </h3>
+                        </div>
+                        <div class="grid grid-cols-2 gap-y-5 gap-x-8 font-mono text-[11px] text-gray-400 font-medium">
+                            <div
+                                class="flex border-b border-white/5 pb-2 group/item hover:text-white transition-colors justify-end">
+                                <span class="flex items-center gap-2 flex-row-reverse">TCP <span
+                                        class="text-accent-magenta opacity-50 text-[10px]">//</span></span>
+                            </div>
+                            <div
+                                class="flex border-b border-white/5 pb-2 group/item hover:text-white transition-colors justify-end">
+                                <span class="flex items-center gap-2 flex-row-reverse">UDP <span
+                                        class="text-accent-magenta opacity-50 text-[10px]">//</span></span>
+                            </div>
+                            <div
+                                class="flex border-b border-white/5 pb-2 group/item hover:text-white transition-colors justify-end">
+                                <span class="flex items-center gap-2 flex-row-reverse">SYN <span
+                                        class="text-accent-magenta opacity-50 text-[10px]">//</span></span>
+                            </div>
+                            <div
+                                class="flex border-b border-white/5 pb-2 group/item hover:text-white transition-colors justify-end">
+                                <span class="flex items-center gap-2 flex-row-reverse">VSE <span
+                                        class="text-accent-magenta opacity-50 text-[10px]">//</span></span>
+                            </div>
+                            <div
+                                class="flex border-b border-white/5 pb-2 group/item hover:text-white transition-colors justify-end">
+                                <span class="flex items-center gap-2 flex-row-reverse">MINECRAFT <span
+                                        class="text-accent-magenta opacity-50 text-[10px]">//</span></span>
+                            </div>
+                            <div
+                                class="flex border-b border-white/5 pb-2 group/item hover:text-white transition-colors justify-end">
+                                <span class="flex items-center gap-2 flex-row-reverse">MCBOT <span
+                                        class="text-accent-magenta opacity-50 text-[10px]">//</span></span>
+                            </div>
+                            <div
+                                class="flex border-b border-white/5 pb-2 group/item hover:text-white transition-colors justify-end">
+                                <span class="flex items-center gap-2 flex-row-reverse">CONNECTION <span
+                                        class="text-accent-magenta opacity-50 text-[10px]">//</span></span>
+                            </div>
+                            <div
+                                class="flex border-b border-white/5 pb-2 group/item hover:text-white transition-colors justify-end">
+                                <span class="flex items-center gap-2 flex-row-reverse">CPS <span
+                                        class="text-accent-magenta opacity-50 text-[10px]">//</span></span>
+                            </div>
+                            <div
+                                class="flex border-b border-white/5 pb-2 group/item hover:text-white transition-colors justify-end">
+                                <span class="flex items-center gap-2 flex-row-reverse">FIVEM <span
+                                        class="text-accent-magenta opacity-50 text-[10px]">//</span></span>
+                            </div>
+                            <div
+                                class="flex border-b border-white/5 pb-2 group/item hover:text-white transition-colors justify-end">
+                                <span class="flex items-center gap-2 flex-row-reverse">FIVEM-TOKEN <span
+                                        class="text-accent-magenta opacity-50 text-[10px]">//</span></span>
+                            </div>
+                            <div
+                                class="flex border-b border-white/5 pb-2 group/item hover:text-white transition-colors justify-end">
+                                <span class="flex items-center gap-2 flex-row-reverse">TS3 <span
+                                        class="text-accent-magenta opacity-50 text-[10px]">//</span></span>
+                            </div>
+                            <div
+                                class="flex border-b border-white/5 pb-2 group/item hover:text-white transition-colors justify-end">
+                                <span class="flex items-center gap-2 flex-row-reverse">MCPE <span
+                                        class="text-accent-magenta opacity-50 text-[10px]">//</span></span>
+                            </div>
+                            <div
+                                class="flex border-b border-white/5 pb-2 group/item hover:text-white transition-colors justify-end">
+                                <span class="flex items-center gap-2 flex-row-reverse">ICMP <span
+                                        class="text-accent-magenta opacity-50 text-[10px]">//</span></span>
+                            </div>
+                            <div
+                                class="flex border-b border-white/5 pb-2 group/item hover:text-white transition-colors justify-end">
+                                <span class="flex items-center gap-2 flex-row-reverse">OVH-UDP <span
+                                        class="text-accent-magenta opacity-50 text-[10px]">//</span></span>
+                            </div>
+                            <div
+                                class="flex border-b border-white/5 pb-2 group/item hover:text-white transition-colors justify-end">
+                                <span class="flex items-center gap-2 flex-row-reverse">MEM <span
+                                        class="text-accent-magenta opacity-50 text-[10px]">//</span></span>
+                            </div>
+                            <div
+                                class="flex border-b border-white/5 pb-2 group/item hover:text-white transition-colors justify-end">
+                                <span class="flex items-center gap-2 flex-row-reverse">NTP <span
+                                        class="text-accent-magenta opacity-50 text-[10px]">//</span></span>
+                            </div>
+                            <div
+                                class="flex border-b border-white/5 pb-2 group/item hover:text-white transition-colors justify-end">
+                                <span class="flex items-center gap-2 flex-row-reverse">DNS <span
+                                        class="text-accent-magenta opacity-50 text-[10px]">//</span></span>
+                            </div>
+                            <div
+                                class="flex border-b border-white/5 pb-2 group/item hover:text-white transition-colors justify-end">
+                                <span class="flex items-center gap-2 flex-row-reverse">ARD <span
+                                        class="text-accent-magenta opacity-50 text-[10px]">//</span></span>
+                            </div>
+                            <div
+                                class="flex border-b border-white/5 pb-2 group/item hover:text-white transition-colors justify-end">
+                                <span class="flex items-center gap-2 flex-row-reverse">CLDAP <span
+                                        class="text-accent-magenta opacity-50 text-[10px]">//</span></span>
+                            </div>
+                            <div
+                                class="flex border-b border-white/5 pb-2 group/item hover:text-white transition-colors justify-end">
+                                <span class="flex items-center gap-2 flex-row-reverse">CHAR <span
+                                        class="text-accent-magenta opacity-50 text-[10px]">//</span></span>
+                            </div>
+                            <div
+                                class="flex border-b border-white/5 pb-2 group/item hover:text-white transition-colors justify-end">
+                                <span class="flex items-center gap-2 flex-row-reverse">RDP <span
+                                        class="text-accent-magenta opacity-50 text-[10px]">//</span></span>
+                            </div>
+                            <div
+                                class="flex border-b border-white/5 pb-2 group/item hover:text-white transition-colors justify-end">
+                                <span class="flex items-center gap-2 flex-row-reverse">SSDP <span
+                                        class="text-accent-magenta opacity-50 text-[10px]">//</span></span>
+                            </div>
+                            <div
+                                class="flex border-b border-white/5 pb-2 group/item hover:text-white transition-colors justify-end">
+                                <span class="flex items-center gap-2 flex-row-reverse">SNMP <span
+                                        class="text-accent-magenta opacity-50 text-[10px]">//</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Technical Specs -->
+        <section class="py-32 px-6 max-w-7xl mx-auto relative z-10" id="specs">
+            <div class="mb-20 text-center md:text-left">
+                <h2
+                    class="font-heading text-4xl md:text-5xl lg:text-6xl font-black uppercase tracking-tighter text-white mb-2 leading-none">
+                    TECHNICAL <span
+                        class="text-transparent border-text block md:inline mt-2 md:mt-0 hover:text-accent-cyan transition-colors cursor-default">SPECS</span>
+                </h2>
+                <div class="h-1 w-24 bg-gradient-to-r from-accent-cyan to-transparent mt-8 mb-6 md:mx-0 mx-auto"></div>
+                <p class="text-gray-500 font-mono text-[10px] tracking-[0.4em] uppercase">Core Architecture details</p>
+            </div>
+
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 relative z-10">
+                <!-- Core Engine -->
+                <div
+                    class="glass-card p-10 group hover:bg-white/[0.04] border-l-[3px] border-l-accent-cyan transition-colors duration-500 cursor-crosshair">
+                    <h4
+                        class="font-mono text-[9px] text-gray-500 mb-4 uppercase tracking-[0.3em] flex items-center justify-between">
+                        Core Engine <span
+                            class="text-accent-cyan group-hover:animate-ping w-2 h-2 rounded-full bg-accent-cyan shadow-[0_0_10px_#00f3ff] transition-all"></span>
+                    </h4>
+                    <p
+                        class="font-heading text-xl md:text-2xl text-white font-black uppercase tracking-widest group-hover:text-accent-cyan group-hover:cyan-glow transition-all">
+                        C++ 20 / Python 3.11 Hybrid</p>
+                </div>
+
+                <!-- Network Stack -->
+                <div
+                    class="glass-card p-10 group hover:bg-white/[0.04] border-l-[3px] border-l-accent-magenta transition-colors duration-500 cursor-crosshair">
+                    <h4
+                        class="font-mono text-[9px] text-gray-500 mb-4 uppercase tracking-[0.3em] flex items-center justify-between">
+                        Network Stack <span
+                            class="text-accent-magenta group-hover:animate-ping w-2 h-2 rounded-full bg-accent-magenta shadow-[0_0_10px_#ff00ff] transition-all"></span>
+                    </h4>
+                    <p
+                        class="font-heading text-xl md:text-2xl text-white font-black uppercase tracking-widest group-hover:text-accent-magenta group-hover:magenta-glow transition-all">
+                        eBPF-Optimized Raw Sockets</p>
+                </div>
+
+                <!-- OS Compatibility -->
+                <div
+                    class="glass-card p-10 group hover:bg-white/[0.04] border-l-[3px] border-l-white transition-colors duration-500 cursor-crosshair">
+                    <h4
+                        class="font-mono text-[9px] text-gray-500 mb-4 uppercase tracking-[0.3em] flex items-center justify-between">
+                        OS Compatibility <span
+                            class="text-white group-hover:animate-ping w-2 h-2 rounded-full bg-white shadow-[0_0_10px_#ffffff] transition-all"></span>
+                    </h4>
+                    <p
+                        class="font-heading text-xl md:text-2xl text-white font-black uppercase tracking-widest group-hover:text-white transition-all">
+                        Linux / Docker Containers</p>
+                </div>
+
+                <!-- Min Deployment -->
+                <div
+                    class="glass-card p-10 group hover:bg-white/[0.04] border-l-[3px] border-l-accent-cyan transition-colors duration-500 cursor-crosshair">
+                    <h4
+                        class="font-mono text-[9px] text-gray-500 mb-4 uppercase tracking-[0.3em] flex items-center justify-between">
+                        Min. Deployment <span
+                            class="text-accent-cyan group-hover:animate-ping w-2 h-2 rounded-full bg-accent-cyan shadow-[0_0_10px_#00f3ff] transition-all"></span>
+                    </h4>
+                    <p
+                        class="font-heading text-xl md:text-2xl text-white font-black uppercase tracking-widest group-hover:text-accent-cyan group-hover:cyan-glow transition-all">
+                        4 vCPU / 8GB RAM / 1Gbps</p>
+                </div>
+
+                <!-- Proxy Support -->
+                <div
+                    class="glass-card p-10 group hover:bg-white/[0.04] border-l-[3px] border-l-accent-magenta transition-colors duration-500 cursor-crosshair">
+                    <h4
+                        class="font-mono text-[9px] text-gray-500 mb-4 uppercase tracking-[0.3em] flex items-center justify-between">
+                        Proxy Support <span
+                            class="text-accent-magenta group-hover:animate-ping w-2 h-2 rounded-full bg-accent-magenta shadow-[0_0_10px_#ff00ff] transition-all"></span>
+                    </h4>
+                    <p
+                        class="font-heading text-xl md:text-2xl text-white font-black uppercase tracking-widest group-hover:text-accent-magenta group-hover:magenta-glow transition-all">
+                        SOCKS5 / HTTP / TOR / SSH</p>
+                </div>
+
+                <!-- Max Bandwidth -->
+                <div
+                    class="glass-card p-10 group hover:bg-white/[0.04] border-l-[3px] border-l-white transition-colors duration-500 cursor-crosshair">
+                    <h4
+                        class="font-mono text-[9px] text-gray-500 mb-4 uppercase tracking-[0.3em] flex items-center justify-between">
+                        Max Bandwidth <span
+                            class="text-white group-hover:animate-ping w-2 h-2 rounded-full bg-white shadow-[0_0_10px_#ffffff] transition-all"></span>
+                    </h4>
+                    <p
+                        class="font-heading text-xl md:text-2xl text-white font-black uppercase tracking-widest group-hover:text-white transition-all text-shadow">
+                        Cluster Scaling 100Gbps+</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Threat Directives CTA / Footer equivalent -->
+        <section class="py-32 px-6 border-t border-white/5 relative overflow-hidden bg-[#030303]" id="acquire">
+            <!-- Scanline horizontal -->
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-accent-cyan/10 to-transparent h-20 w-full animate-scanline opacity-30"
+                aria-hidden="true"></div>
+
+            <div class="max-w-4xl mx-auto text-center relative z-10 w-full px-4">
+                <h2
+                    class="font-heading text-4xl sm:text-6xl md:text-8xl font-black mb-8 md:mb-12 tracking-tighter uppercase italic text-white/10 group break-words">
+                    ACQUIRE THE <span
+                        class="block text-white py-2 sm:py-0 not-italic transition-all duration-700 group-hover:text-accent-cyan group-hover:cyan-glow">ASSET.</span>
+                </h2>
+
+                <div class="flex items-center justify-center gap-4 mb-20 font-mono">
+                    <div class="h-[1px] w-8 md:w-16 bg-white/10"></div>
+                    <p
+                        class="text-accent-cyan font-bold text-[9px] md:text-[10px] uppercase tracking-[0.4em] md:tracking-[0.6em] animate-pulse">
+                        Direct Encrypted Handshake Required
+                    </p>
+                    <div class="h-[1px] w-8 md:w-16 bg-white/10"></div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8 text-left mb-16">
+                    <a href="https://t.me/MUJIN_CORE_OFFICIAL" target="_blank" rel="noopener noreferrer"
+                        class="glass-card p-10 group border-x border-white/5 hover:border-accent-cyan/50 hover:bg-white/[0.03] transition-all duration-500 cursor-crosshair">
+                        <h4
+                            class="font-mono text-[9px] text-gray-500 mb-4 uppercase tracking-[0.3em] flex items-center justify-between">
+                            Telegram Contact <span
+                                class="text-accent-cyan group-hover:animate-ping w-2 h-2 rounded-full bg-accent-cyan"></span>
+                        </h4>
+                        <p
+                            class="text-white font-bold text-lg md:text-xl tracking-widest group-hover:text-accent-cyan transition-colors italic">
+                            @falkenfujimaru</p>
+                    </a>
+                    <a href="mailto:STRIKE@REICHIMARU.SYS"
+                        class="glass-card p-10 group border-x border-white/5 hover:border-accent-magenta/50 hover:bg-white/[0.03] transition-all duration-500 cursor-crosshair">
+                        <h4
+                            class="font-mono text-[9px] text-gray-500 mb-4 uppercase tracking-[0.3em] flex items-center justify-between">
+                            Encrypted PGP Mail <span
+                                class="text-accent-magenta group-hover:animate-ping w-2 h-2 rounded-full bg-accent-magenta"></span>
+                        </h4>
+                        <p
+                            class="text-white font-bold text-[13px] md:text-[15px] tracking-widest group-hover:text-accent-magenta transition-colors italic">
+                            falkenfujimaru@proton.me</p>
+                    </a>
+                </div>
+
+                <div
+                    class="bg-white/[0.02] border border-white/5 p-8 relative group overflow-hidden mb-16 max-w-2xl mx-auto">
+                    <div
+                        class="absolute top-0 right-0 p-3 font-mono text-[8px] text-white/20 tracking-widest uppercase">
+                        SEC_MODE: XMR_PREFERRED</div>
+                    <h4 class="font-mono text-[10px] font-bold text-gray-500 uppercase tracking-[0.4em] mb-8">Asset
+                        Liquidity Channels</h4>
+
+                    <div
+                        class="flex flex-wrap justify-center items-center gap-x-12 gap-y-6 font-mono text-[10px] text-gray-400 uppercase tracking-[0.2em] font-medium">
+                        <div class="flex items-center gap-3">
+                            <span class="w-1.5 h-1.5 bg-accent-cyan rounded-full shadow-[0_0_8px_#00f3ff]"></span>
+                            <span>BTC / XMR / ETH (Anonymous)</span>
+                        </div>
+                        <div
+                            class="flex items-center gap-3 transition-colors text-white hover:text-accent-magenta cursor-crosshair group-hover:animate-pulse">
+                            <span class="w-1.5 h-1.5 bg-accent-magenta rounded-full shadow-[0_0_8px_#ff00ff]"></span>
+                            <span>PayPal / Card (Verified)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-16 pb-12 w-full max-w-3xl mx-auto">
+                    <p
+                        class="text-gray-600 font-mono text-[8px] md:text-[9px] tracking-[0.3em] uppercase leading-loose border-t border-b border-white/5 py-8 bg-white/[0.01]">
+                        PROPRIETARY LICENSE & LIABILITY WAIVER. This asset is licensed for internal security research
+                        and verified stress-testing environments. By executing the software, the operator assumes full
+                        legal and technical responsibility for all generated traffic. The developers (MUJIN Collective)
+                        are not liable for any service interruptions, financial losses, or legal consequences resulting
+                        from deployment. Use of this tool against any infrastructure without explicit, written
+                        authorization from the owner is a violation of international law. Version: 3.0.0-alpha. Build:
+                        #9201-STRIKER.
+                    </p>
+                </div>
+
+                <div class="flex flex-col items-center gap-4 text-[9px] tracking-[0.4em] font-mono text-gray-500 pb-10">
+                    <p>CRAFTED BY</p>
+                    <p class="text-lg text-white font-black tracking-widest uppercase italic font-heading">乍丹し片ヨ几
+                        乍凵勹工冊代理凵</p>
+                    <p class="mt-4 text-[7px] text-gray-700">© 2026 REICHIMARU TECH. ALL RIGHTS RESERVED.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+
+</html>
